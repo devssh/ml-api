@@ -1,0 +1,4 @@
+.envrc
+.env
+.idea/**
+python-server/models/**

@@ -1,0 +1,20 @@
+version: '3.2'
+services:
+  flask:
+    image: webapp-flask
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    volumes:
+      - type: bind
+        source: ./python-server/models
+        target: /code/models
+      - type: bind
+        source: ./python-server/uploads
+        target: /code/uploads
+    network_mode: bridge
+    ports:
+      - "5001:5001"
+    environment:
+      - username=${username}
+      - password=${password}
