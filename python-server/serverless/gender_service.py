@@ -49,7 +49,7 @@ def predict_from_name_tf():
     request_data = json.loads(list(request.form.keys())[0])
     name_string = request_data["names"]
 
-    if not request_data["auth"] in "c9095970345d":
+    if not "c9095970345d" in request_data["auth"]:
         return "Incorrect authentication"
     import numpy as np
     import pandas as pd
@@ -85,7 +85,7 @@ def predict_from_image_tf():
 
     request_data = dict(request.form)
 
-    if not request_data["auth"] in "c9095970345d":
+    if not "c9095970345d" in request_data["auth"]:
         return "Incorrect authentication"
 
 
