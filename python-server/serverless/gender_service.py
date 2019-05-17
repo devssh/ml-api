@@ -45,14 +45,18 @@ import gender_service
 
 
 def predict_from_name_tf():
+
+    request_data = json.loads(list(request.form.keys())[0])
+    name_string = request_data["names"]
+
+    if not request_data["auth"] in "c9095970345d":
+        return "Incorrect authentication"
     import numpy as np
     import pandas as pd
     import string
     alphabet_list = list(string.ascii_lowercase)
     max_name_len = 20
 
-    request_data = json.loads(list(request.form.keys())[0])
-    name_string = request_data["names"]
 
     names = pd.Series(list(filter(len, name_string.split(","))))
     names_transform = names.apply(
@@ -78,6 +82,19 @@ def predict_from_image_tf():
     from contextlib import contextmanager
     import sys
     sys.path.insert(0, 'models')
+
+    request_data = dict(request.form)
+
+    if not request_data["auth"] in "c9095970345d":
+        return "Incorrect authentication"
+
+
+    from werkzeug import secure_filename
+    file = request.files['pimage']
+    if file:
+        filename = secure_filename(file.filename)
+        file.save("uploads/" + filename)
+
 
     from wide_resnet import WideResNet
 
@@ -155,8 +172,8 @@ def predict_from_image_tf():
         df = pd.DataFrame(preds, columns=["pred", "screen_name"])
         df["screen_name"] = df["screen_name"].apply(
             lambda x: ".png".join(x.split("uploads/", 1)[1].split(".png")[0:-1]))
-        df["pred"] = df["pred"].apply(lambda x: int(int(x * 100) / 10))
-        return jsonify({"results": json.loads(df.to_json(orient="records"))})
+        df["pred"] = df["pred"].apply(lambda x: x)
+        return jsonify({"results": json.loads(df.to_json(orient="records")), "syntax": ["m_pred", "0", "w_pred", "1"]})
 
     return predict_images()
 
