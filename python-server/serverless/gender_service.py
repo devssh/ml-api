@@ -1,19 +1,20 @@
 import numpy as np
 import pandas as pd
-#from tqdm import tqdm
-#tqdm.pandas()
+
+# from tqdm import tqdm
+# tqdm.pandas()
 np.random.seed(7)
 
 import tensorflow as tf
+
 load_model = tf.keras.models.load_model
 adam = tf.keras.optimizers.Adam(lr=1e-3)
 
-
-
 import re
 
+
 def string_vectorizer(strng, alphabet, max_str_len=20, gender=True):
-    if(gender):
+    if (gender):
         strng = re.sub(r"[^a-z]+", "", strng.lower())
     else:
         strng = re.sub(r"[^a-zA-z0-9-]+", "", strng)
@@ -42,6 +43,7 @@ methods = {
 
 import gender_service
 
+
 def predict_from_name_tf():
     import numpy as np
     import pandas as pd
@@ -53,32 +55,34 @@ def predict_from_name_tf():
     name_string = request_data["names"]
 
     names = pd.Series(list(filter(len, name_string.split(","))))
-    names_transform = names.apply(lambda name: gender_service.string_vectorizer(name, alphabet_list, max_name_len).reshape(1, 20, 26))
+    names_transform = names.apply(
+        lambda name: gender_service.string_vectorizer(name, alphabet_list, max_name_len).reshape(1, 20, 26))
     names_transform = np.vstack(names_transform.tolist())
     prediction = gender_service.gendermodel.predict(names_transform)
-    prediction = [[int(pred[0]*100)/100, int(pred[1]*100)/100] for pred in prediction]
-    return jsonify({"names": name_string, "syntax": ["male_prob", "female_prob"],"predictions": np.array(prediction).tolist()})
+    prediction = [[int(pred[0] * 100) / 100, int(pred[1] * 100) / 100] for pred in prediction]
+    return jsonify(
+        {"names": name_string, "syntax": ["male_prob", "female_prob"], "predictions": np.array(prediction).tolist()})
+
 
 
 
 def predict_from_image_tf():
-    def get_time_now():
     import datetime
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     from pathlib import Path
     import cv2
     import dlib
     import numpy as np
+    import pandas as pd
     import argparse
     from contextlib import contextmanager
-
     import sys
     sys.path.insert(0, 'models')
 
     from wide_resnet import WideResNet
-    from keras.utils.data_utils import get_file
 
+    def get_time_now():
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def draw_label(image, point, label, font=cv2.FONT_HERSHEY_SIMPLEX,
                    font_scale=1, thickness=2):
@@ -86,10 +90,6 @@ def predict_from_image_tf():
         x, y = point
         cv2.rectangle(image, (x, y - size[1]), (x + size[0], y), (255, 0, 0), cv2.FILLED)
         cv2.putText(image, label, point, font, font_scale, (255, 255, 255), thickness)
-
-
-
-
 
     def yield_images_from_dir(image_dir):
         image_dir = Path(image_dir)
@@ -102,7 +102,6 @@ def predict_from_image_tf():
                 r = 640 / max(w, h)
                 yield (cv2.resize(img, (int(w * r), int(h * r))), image_path)
 
-
     depth = 16
     k = 8
     margin = 0.4
@@ -110,15 +109,13 @@ def predict_from_image_tf():
     def predict_images():
         image_dir = "uploads/"
 
-        weight_file = get_file("weights.28-3.73.hdf5")
-
         # for face detection
         detector = dlib.get_frontal_face_detector()
 
         # load model and weights
         img_size = 64
         model = WideResNet(img_size, depth=depth, k=k)()
-        model.load_weights(weight_file)
+        model.load_weights("models/weights.28-3.73.hdf5")
 
         image_generator = yield_images_from_dir(image_dir) if image_dir else yield_images()
         preds = []
@@ -149,16 +146,19 @@ def predict_from_image_tf():
                 predicted_genders = results[0]
                 prediction = 1 - min([pred[1] for pred in predicted_genders])
                 for pred in predicted_genders:
-                    if(pred[0] > pred[1]):
-                        prediction=pred[0]
+                    if (pred[0] > pred[1]):
+                        prediction = pred[0]
                         break
 
                 preds = [*preds, (prediction, str(name))]
 
         df = pd.DataFrame(preds, columns=["pred", "screen_name"])
-        df["screen_name"] = df["screen_name"].apply(lambda x: ".png".join(x.split("uploads/", 1)[1].split(".png")[0:-1]))
-        df["pred"] = df["pred"].apply(lambda x: int(int(x*100)/10))
-        return jsonify({"results":json.loads(df.to_json(orient="records"))})
+        df["screen_name"] = df["screen_name"].apply(
+            lambda x: ".png".join(x.split("uploads/", 1)[1].split(".png")[0:-1]))
+        df["pred"] = df["pred"].apply(lambda x: int(int(x * 100) / 10))
+        return jsonify({"results": json.loads(df.to_json(orient="records"))})
+
+    return predict_images()
 
 
 def upload_image():
