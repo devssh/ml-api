@@ -1,0 +1,10 @@
+curl -XPOST 'localhost:5001/gender/extract_from_image' -F "pimage=@/Users/devashishsood/Documents/devashish.png" -F "auth=c9095970345d"
+
+Output:
+{"results":[{"pred":0.0306066871,"screen_name":"devashish"}],"syntax":["m_pred","0","w_pred","1"]}
+
+
+curl -XPOST 'twmlapi.com/gender/extract_from_name' -d '{"names": "devashish,gayathri", "auth": "c9095970345d"}'
+
+Output:
+{"names":"devashish,gayathri","predictions":[[0.98,0.01],[0.04,0.95]],"syntax":["male_prob","female_prob"]}
