@@ -71,6 +71,8 @@ def predict_from_name_tf():
 
 
 def predict_from_image_tf():
+    gender_service.upload_image(request)
+
     import datetime
 
     from pathlib import Path
@@ -87,14 +89,6 @@ def predict_from_image_tf():
 
     if not "c9095970345d" in request_data["auth"]:
         return "Incorrect authentication"
-
-
-    from werkzeug import secure_filename
-    file = request.files['pimage']
-    if file:
-        filename = secure_filename(file.filename)
-        file.save("uploads/" + filename)
-
 
     from wide_resnet import WideResNet
 
@@ -178,7 +172,7 @@ def predict_from_image_tf():
     return predict_images()
 
 
-def upload_image():
+def upload_image(request):
     from werkzeug import secure_filename
     file = request.files['pimage']
     if file:

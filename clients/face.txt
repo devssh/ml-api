@@ -1,0 +1,4 @@
+curl -XPOST 'localhost:5001/face/get_bounding_rect_64x64' -F "pimage=@/Users/devashishsood/Documents/faces.png" -F "auth=c9095970345d"
+
+Output
+{"dlib_frontal_detector":[{"bottom":159,"height":316,"left":395,"name":"uploads/faces.png","right":492,"top":62,"width":639},{"bottom":130,"height":316,"left":466,"name":"uploads/faces.png","right":560,"top":33,"width":639},{"bottom":136,"height":316,"left":194,"name":"uploads/faces.png","right":291,"top":39,"width":639},{"bottom":140,"height":316,"left":297,"name":"uploads/faces.png","right":394,"top":46,"width":639},{"bottom":211,"height":316,"left":34,"name":"uploads/faces.png","right":128,"top":114,"width":639},{"bottom":117,"height":316,"left":109,"name":"uploads/faces.png","right":189,"top":37,"width":639},{"bottom":214,"height":640,"left":178,"name":"uploads/devashish.png","right":343,"top":49,"width":539}]}

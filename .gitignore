@@ -2,3 +2,4 @@
 .env
 .idea/**
 python-server/models/**
+python-server/uploads/**
