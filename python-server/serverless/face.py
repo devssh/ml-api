@@ -16,14 +16,15 @@ model = WideResNet(img_size, depth=depth, k=k)()
 model.load_weights("models/weights.28-3.73.hdf5")
 
 def get_bounding_rect():
+    gender_service.upload_image(request)
+    request_data = dict(request.form)
+    if not "c9095970345d" in request_data["auth"]:
+        return "Incorrect authentication"
     from pathlib import Path
     import cv2
     import dlib
     import numpy as np
     import pandas as pd
-    request_data = dict(request.form)
-    if not "c9095970345d" in request_data["auth"]:
-        return "Incorrect authentication"
     def yield_images_from_dir(image_dir):
         image_dir = Path(image_dir)
         for image_path in image_dir.glob("*.*"):

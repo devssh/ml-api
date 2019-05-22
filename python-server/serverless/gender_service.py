@@ -72,9 +72,11 @@ def predict_from_name_tf():
 
 def predict_from_image_tf():
     gender_service.upload_image(request)
+    request_data = dict(request.form)
 
+    if not "c9095970345d" in request_data["auth"]:
+        return "Incorrect authentication"
     import datetime
-
     from pathlib import Path
     import cv2
     import dlib
@@ -85,10 +87,6 @@ def predict_from_image_tf():
     import sys
     sys.path.insert(0, 'models')
 
-    request_data = dict(request.form)
-
-    if not "c9095970345d" in request_data["auth"]:
-        return "Incorrect authentication"
 
     from wide_resnet import WideResNet
 
@@ -119,10 +117,8 @@ def predict_from_image_tf():
 
     def predict_images():
         image_dir = "uploads/"
-
         # for face detection
         detector = dlib.get_frontal_face_detector()
-
         # load model and weights
         img_size = 64
         model = WideResNet(img_size, depth=depth, k=k)()
@@ -135,7 +131,6 @@ def predict_from_image_tf():
         for (img, name) in image_generator:
             input_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img_h, img_w, _ = np.shape(input_img)
-
             # detect faces using dlib detector
             detected = detector(input_img, 1)
             faces = np.empty((len(detected), img_size, img_size, 3))
@@ -151,7 +146,6 @@ def predict_from_image_tf():
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                     # cv2.rectangle(img, (xw1, yw1), (xw2, yw2), (255, 0, 0), 2)
                     faces[i, :, :, :] = cv2.resize(img[yw1:yw2 + 1, xw1:xw2 + 1, :], (img_size, img_size))
-
                 # predict ages and genders of the detected faces
                 results = model.predict(faces)
                 predicted_genders = results[0]
