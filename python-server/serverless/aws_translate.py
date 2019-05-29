@@ -15,7 +15,7 @@ character_count = 0
 def aws_translate_text():
     request_data = json.loads(list(request.form.keys())[0])
     auth = request_data["auth"]
-    if not "c9095970345d" in request_data["auth"]:
+    if not "c9095970345dx" in request_data["auth"]:
         return "Incorrect authentication"
     text = utils.remove_quotes(str(request_data["Text"]))
     source = utils.remove_quotes(str(request_data["SourceLanguageCode"]))
@@ -32,14 +32,10 @@ def aws_translate_text():
 
 def increment_char_count(text):
     global character_count
+    if character_count > 900000:
+        raise ValueError("Rate limit exceeded")
     character_count = character_count + len(text)
 
 
 def aws_char_count():
     return str(aws_translate.character_count)
-
-# {
-#     "Text": "Buongiorno",
-#     "SourceLanguageCode": "it",
-#     "TargetLanguageCode": "en"
-# }

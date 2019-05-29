@@ -18,10 +18,10 @@ def yield_images_from_dir(image_dir):
 image_generator = yield_images_from_dir(image_dir)
 
 img_size = 64
-top = 49
+top = 147
 bottom = 214
-left = 178
-right = 343
+left = 382
+right = 449
 
 for (img, name) in image_generator:
     print(str(name))
