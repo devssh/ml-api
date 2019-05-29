@@ -3,3 +3,4 @@
 .idea/**
 python-server/models/**
 python-server/uploads/**
+aws/**

@@ -4,3 +4,4 @@ curl -XPOST 'localhost:5001/gender/extract_from_image' -F "pimage=@/Users/devash
 
 curl -XPOST 'localhost:5001/gender/extract_from_name' -d '{"names": "devashish,gayathri", "auth": "c9095970345d"}'
 
+curl -XPOST 'localhost:5001/aws/translate' -d '{"Text": "Buongiorno","SourceLanguageCode": "it", "TargetLanguageCode":"en","auth":"Cc9095970345d"}'
