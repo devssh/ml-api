@@ -15,4 +15,4 @@ COPY ./aws/ /root/.aws/
 
 COPY ./python-server/ .
 RUN ["python", "serverless.py"]
-CMD ["gunicorn","-b", "0.0.0.0:5001","-w", "2", "server:app"]
+CMD ["gunicorn","-b", "0.0.0.0:5001","-w", "2", "server:app", "--timeout", "120"]

@@ -7,3 +7,5 @@ curl -XPOST 'localhost:5001/gender/extract_from_name' -d '{"names": "devashish,g
 curl -XPOST 'localhost:5001/aws/translate' -d '{"Text": "Buongiorno","SourceLanguageCode": "it", "TargetLanguageCode":"en","auth":"Cc9095970345d"}'
 
 curl -XPOST 'localhost:5001/aws/speech' -d '{"Text": "danke Devashish Sood, I am polly","auth":"Cc9095970345d"}' --output output.mp3
+
+curl -XPOST 'localhost:5001/aws/speech_to_text' -F "pimage=@/Users/devashishsood/audio.mp3" -F "auth=Cc9095970345dx"

@@ -24,7 +24,7 @@ def aws_polly():
                                   "--output-format \"mp3" + "\" " +
                                   "--voice-id \"Joanna" + "\" " +
                                   "--text \"" + text + "\" output.mp3")
-    utils.get_cli_output("mv output.mp3 uploads/output.mp3")
+    utils.get_cli_output("mv output.mp3 models/output.mp3")
     return send_file('output.mp3', mimetype='audio/mpeg')
 
 

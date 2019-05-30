@@ -4,3 +4,4 @@
 python-server/models/**
 python-server/uploads/**
 aws/**
+.DS_STORE

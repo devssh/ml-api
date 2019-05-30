@@ -166,12 +166,11 @@ def predict_from_image_tf():
     return predict_images()
 
 
-def upload_image(request):
+def upload_image(request, folder="uploads/"):
     from werkzeug import secure_filename
     file = request.files['pimage']
     if file:
         filename = secure_filename(file.filename)
-        file.save("uploads/" + filename)
+        file.save(folder + filename)
         return 'Uploaded file'
-    # return send_file(filename, mimetype='image/png')
     return "Error: No file found"
