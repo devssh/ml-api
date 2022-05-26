@@ -6,7 +6,7 @@ psycopg2==2.7.7
 flask-cors==3.0.7
 ftfy==5.5.1
 dill==0.2.9
-tensorflow==1.13.1
+tensorflow==2.7.2
 opencv-python==4.1.0.25
 dlib==19.15.0
 keras==2.1.3
